@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You · From My Heart</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            position: relative;
+            background: #1a0f1a; /* fallback color */
+        }
+
+        /* Fixed background image */
+        .fixed-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('WhatsApp Image 2026-02-13 at 11.20.57 PM.jpeg') center/cover no-repeat;
+            z-index: 0;
+        }
+
+        /* Subtle overlay to keep text readable */
+        .fixed-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(2px);
+            z-index: 1;
+        }
+
+        /* Animated gradient overlay */
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 70%, rgba(255, 100, 150, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(200, 100, 255, 0.2) 0%, transparent 40%);
+            z-index: 2;
+            animation: gradientShift 12s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Floating hearts - very subtle */
+        .heart {
+            position: fixed;
+            font-size: 1.2rem;
+            top: -10vh;
+            z-index: 5;
+            animation: fall linear infinite;
+            pointer-events: none;
+            filter: drop-shadow(0 0 8px rgba(255, 100, 150, 0.4));
+            opacity: 0.4;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main container - scrollable content */
+        .scroll-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 105, 180, 0.5) rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff99cc, #ff69b4);
+            border-radius: 10px;
+        }
+
+        /* Content wrapper */
+        .content-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 1rem 0.5rem 3rem 0.5rem;
+        }
+
+        /* Glass card - song section */
+        .song-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 200, 220, 0.2);
+            border-radius: 30px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: cardGlow 4s infinite alternate;
+        }
+
+        @keyframes cardGlow {
+            0% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+            100% { box-shadow: 0 25px 50px rgba(255, 105, 180, 0.2); }
+        }
+
+        .song-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .song-subtitle {
+            color: rgba(255, 200, 220, 0.9);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            font-family: 'Cinzel', serif;
+        }
+
+        .song-title {
+            font-size: 2rem;
+            font-weight: 300;
+            background: linear-gradient(135deg, #fff5f8, #ffb6c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Cinzel', serif;
+        }
+
+        .lyrics {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .lyric-main {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #fff0f5;
+            text-shadow: 0 0 15px rgba(255, 150, 180, 0.5);
+            margin-bottom: 0.5rem;
+            font-family: 'Noto Sans Kannada', sans-serif;
+        }
+
+        .lyric-sub {
+            font-size: 1.3rem;
+            color: rgba(255, 220, 230, 0.9);
+            text-shadow: 0 0 10px rgba(255, 150, 180, 0.3);
+            font-family: 'Noto Sans Kannada', sans-serif;
+        }
+
+        .heart-emoji {
+            display: inline-block;
+            animation: heartbeat 2s infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            30% { transform: scale(1.2); }
+        }
+
+        /* Audio controls */
+        .audio-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .visualizer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 5px;
+            height: 40px;
+        }
+
+        .bar {
+            width: 5px;
+            background: linear-gradient(to top, #ff99cc, #ffb6c1);
+            border-radius: 10px;
+            animation: wave 1.5s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(255, 150, 180, 0.3);
+        }
+
+        .bar:nth-child(1) { height: 15px; animation-delay: 0s; }
+        .bar:nth-child(2) { height: 25px; animation-delay: 0.1s; }
+        .bar:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+        .bar:nth-child(4) { height: 30px; animation-delay: 0.3s; }
+        .bar:nth-child(5) { height: 22px; animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.7); opacity: 0.5; }
+            50% { transform: scaleY(1.3); opacity: 0.8; }
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 200, 220, 0.2);
+            border-radius: 40px;
+            padding: 0.4rem 1.2rem;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .play-btn {
+            background: rgba(255, 105, 180, 0.6);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            font-size: 1.3rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn:hover {
+            background: rgba(255, 105, 180, 0.8);
+            transform: scale(1.05);
+        }
+
+        .seek {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            -webkit-appearance: none;
+        }
+
+        .seek::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ff99cc;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .time {
+            color: #ffb6c1;
+            font-size: 0.85rem;
+            min-width: 40px;
+        }
+
+        /* Letter section - SINGLE PARAGRAPH with animated reveal */
+        .letter-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 220, 0.15);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .letter-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .letter-title {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #fff5f8, #ffb6c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 2px;
+        }
+
+        /* SINGLE PARAGRAPH with animated lines */
+        .letter-paragraph {
+            font-size: 1.2rem;
+            line-height: 2.2rem;
+            color: rgba(255, 245, 250, 0.95);
+            background: rgba(255, 255, 255, 0.02);
+            padding: 2rem;
+            border-radius: 30px;
+            border-left: 3px solid rgba(255, 150, 180, 0.3);
+            font-family: 'Inter', 'Noto Sans Kannada', sans-serif;
+            white-space: pre-line;
+            transition: all 0.3s;
+        }
+
+        .letter-paragraph:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: #ff99cc;
+        }
+
+        /* Each line animates on scroll */
+        .line {
+            display: block;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: linePop 0.8s forwards;
+            animation-timeline: view();
+            animation-range: entry 0% entry 60%;
+            margin-bottom: 0.3rem;
+        }
+
+        @keyframes linePop {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Different delays for a cascading effect */
+        .line:nth-child(1) { animation-delay: 0.1s; }
+        .line:nth-child(2) { animation-delay: 0.2s; }
+        .line:nth-child(3) { animation-delay: 0.3s; }
+        .line:nth-child(4) { animation-delay: 0.4s; }
+        .line:nth-child(5) { animation-delay: 0.5s; }
+        .line:nth-child(6) { animation-delay: 0.6s; }
+        .line:nth-child(7) { animation-delay: 0.7s; }
+        .line:nth-child(8) { animation-delay: 0.8s; }
+        .line:nth-child(9) { animation-delay: 0.9s; }
+        .line:nth-child(10) { animation-delay: 1s; }
+        .line:nth-child(11) { animation-delay: 1.1s; }
+        .line:nth-child(12) { animation-delay: 1.2s; }
+        .line:nth-child(13) { animation-delay: 1.3s; }
+        .line:nth-child(14) { animation-delay: 1.4s; }
+        .line:nth-child(15) { animation-delay: 1.5s; }
+
+        .highlight {
+            color: #ffb6c1;
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(255, 150, 180, 0.3);
+        }
+
+        .special {
+            background: linear-gradient(135deg, #ffb6c1, #ff99cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        .kannada {
+            font-family: 'Noto Sans Kannada', 'Nirmala UI', sans-serif;
+            color: #ffe6f0;
+        }
+
+        /* Night call section - part of the paragraph */
+        .night-part {
+            text-align: center;
+            margin: 1.5rem 0 0.5rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 150, 180, 0.1);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 150, 180, 0.3);
+            animation: softGlow 3s infinite alternate;
+        }
+
+        @keyframes softGlow {
+            0% { box-shadow: 0 0 20px rgba(255, 150, 180, 0.1); }
+            100% { box-shadow: 0 0 40px rgba(255, 150, 180, 0.2); }
+        }
+
+        .night-text {
+            font-size: 1.6rem;
+            color: #fff0f5;
+        }
+
+        .night-sub {
+            font-size: 1.3rem;
+            color: #ffb6c1;
+        }
+
+        /* Signature */
+        .signature-block {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .from-heart {
+            font-size: 1.5rem;
+            color: #ffb6c1;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .heart-sign {
+            font-size: 3rem;
+            animation: heartbeat 2s infinite;
+            filter: drop-shadow(0 0 15px #ff99cc);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 1rem;
+            color: rgba(255, 200, 220, 0.6);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .song-card { padding: 1.5rem; }
+            .song-title { font-size: 1.6rem; }
+            .lyric-main { font-size: 1.4rem; }
+            .lyric-sub { font-size: 1.1rem; }
+            .letter-card { padding: 1.5rem; }
+            .letter-title { font-size: 1.5rem; }
+            .letter-paragraph { font-size: 1rem; line-height: 2rem; padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fixed background image -->
+    <div class="fixed-bg"></div>
+    <div class="gradient-overlay"></div>
+    
+    <!-- Falling hearts - subtle -->
+    <script>
+        const heartEmojis = ['❤️', '💗', '💖', '💝'];
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 4 + 5) + 's';
+            heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 9000);
+        }
+        setInterval(createHeart, 600);
+    </script>
+
+    <!-- Scrollable container -->
+    <div class="scroll-container">
+        <div class="content-wrapper">
+            <!-- Song Section -->
+            <div class="song-card">
+                <div class="song-header">
+                    <div class="song-subtitle">✦ ಕುಹು ಕೂಹೂ ಕೋಗಿಲೆ ✦</div>
+                    <div class="song-title">Preethiya Oora Nayakiye</div>
+                </div>
+
+                <div class="lyrics">
+                    <div class="lyric-main">ಪ್ರೀತಿಯ ಊರ ನಾಯಕಿಯೇ</div>
+                    <div class="lyric-sub">ಮುತ್ತಿನ ತೇರ ದೇವತೆಯೇ <span class="heart-emoji">💗</span></div>
+                </div>
+
+                <div class="audio-section">
+                    <div class="visualizer" id="visualizer">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                        <div class="bar"></div><div class="bar"></div>
+                    </div>
+
+                    <!-- Audio with relative path -->
+                    <audio id="audio" preload="auto" loop>
+                        <source src="kuhu-kuhu-kogile-audio_AbNGIlVh.mp3" type="audio/mpeg">
+                    </audio>
+
+                    <div class="controls">
+                        <button class="play-btn" id="playBtn">▶</button>
+                        <input type="range" class="seek" id="seek" value="0" min="0" max="100" step="0.1">
+                        <span class="time" id="time">0:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YOUR MESSAGE - SINGLE PARAGRAPH with animated lines -->
+            <div class="letter-card">
+                <div class="letter-header">
+                    <div class="letter-icon">💌</div>
+                    <div class="letter-title">My Heart in Words</div>
+                </div>
+
+                <div class="letter-paragraph">
+                    <span class="line"><span class="kannada">Hey, Bhuvvv</span></span>
+                    <span class="line"><span class="kannada">Nin situation nanage artha aagutte…</span> I know you're healing right now, and nija, I truly respect that. This isn't pressure, illa expectations — just me being honest.</span>
+                    
+                    <span class="line"><span class="kannada">Nanage flirting baralla, fancy lines kuda alla…</span> but I believe in being real. Somewhere along the way, <span class="highlight">neenu nanage tumba special aagbitte.</span></span>
+                    
+                    <span class="line"><span class="kannada">Life alli jana barthare, hodthare…</span> but kelavu people quietly heart touch madthare. <span class="special">Neenu adu madide.</span></span>
+                    
+                    <span class="line">Perfect agi love kodthini anta promise madalla… aadre care, patience, respect mattu genuine effort idu nan promise. <span class="highlight">Neenu nan life alli iddre, nin smile always matter madutte.</span></span>
+                    
+                    <span class="line"><span class="kannada">Nanage yenu beku anta illa.</span> Take your time. Heal agi. Nim pace alli iru. Nija helbeku andre — <span class="special">neenu nanage important.</span></span>
+                    
+                    <span class="line">
+                        <div class="night-part">
+                            <div class="night-text">Bass ithnaii!!</div>
+                            <div class="night-sub">fir milthey night call pe</div>
+                            <div style="font-size: 2rem; margin-top: 0.5rem;">🌙✨</div>
+                        </div>
+                    </span>
+                </div>
+
+                <div class="signature-block">
+                    <div class="from-heart">From my heart</div>
+                    <div class="heart-sign">❤️</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <span>✦ Always here for you ✦</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Audio player
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const seek = document.getElementById('seek');
+        const time = document.getElementById('time');
+        const visualizer = document.getElementById('visualizer');
+
+        audio.addEventListener('loadedmetadata', () => {
+            seek.max = audio.duration;
+            // Set your song start time here (seconds)
+            // audio.currentTime = 5.5; // Uncomment and change
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            seek.value = audio.currentTime;
+            const mins = Math.floor(audio.currentTime / 60);
+            const secs = Math.floor(audio.currentTime % 60);
+            time.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        });
+
+        seek.addEventListener('input', (e) => {
+            audio.currentTime = e.target.value;
+        });
+
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play().catch(() => {
+                    alert('Please make sure "kuhu-kuhu-kogile-audio.mp3" is in the same folder.');
+                });
+                playBtn.textContent = '⏸';
+            } else {
+                audio.pause();
+                playBtn.textContent = '▶';
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            playBtn.textContent = '▶';
+        });
+    </script>
+</body>
+</html>
